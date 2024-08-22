@@ -5,7 +5,7 @@ import com.yifan.foundation.base.Person;
 import java.util.Optional;
 
 public class HelloMockito {
-    private String greeting = "Hello %s, from Mockito!";
+    private static final String GREETING = "Hello %s, from Mockito!";
 
     private final PersonRepository personRepository;
     private final TranslationService translationService;
@@ -19,9 +19,9 @@ public class HelloMockito {
         Optional<Person> person = personRepository.findById(id);
         String name = person.map(Person::getFirst).orElse("World");
 
-        // do not use:String.format(greeting, name) just use name, then prone:
-        // prone org.mockito.exceptions.misusing.PotentialStubbingProblem:
+        // do not use: String.format(greeting, name) just use name, then prone:
+        //      org.mockito.exceptions.misusing.PotentialStubbingProblem:
         //      Strict stubbing argument mismatch.
-        return translationService.translate(String.format(greeting, name), sourceLanguage, targetLanguage);
+        return translationService.translate(String.format(GREETING, name), sourceLanguage, targetLanguage);
     }
 }
