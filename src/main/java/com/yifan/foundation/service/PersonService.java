@@ -19,7 +19,7 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public List<String> getLastNames(){
+    public List<String> getLastNames() {
         return personRepository.findAll()
                 .stream()
                 .map(Person::getLast)

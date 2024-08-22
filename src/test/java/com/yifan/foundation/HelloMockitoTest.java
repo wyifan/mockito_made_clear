@@ -43,19 +43,19 @@ class HelloMockitoTest {
     void greetAtAPersonThatExists() {
         when(personRepository.findById(anyInt()))
                 .thenReturn(Optional.of(
-                new Person(1, "Grace", "Hopper",
-                        LocalDate.of(1906, Month.DECEMBER, 9))));
+                        new Person(1, "Grace", "Hopper",
+                                LocalDate.of(1906, Month.DECEMBER, 9))));
 
         when(translationService
-                .translate("Hello Grace, from Mockito!","en","en"))
+                .translate("Hello Grace, from Mockito!", "en", "en"))
                 .thenReturn("Hello Grace, from Mockito!");
 
-        String greeting = helloMockito.greet(1,"en","en");
+        String greeting = helloMockito.greet(1, "en", "en");
         assertEquals("Hello Grace, from Mockito!", greeting);
 
         // verify the methods are called once, in the right order
         // TODO: do not know why
-        InOrder inOrder= Mockito.inOrder(personRepository,translationService);
+        InOrder inOrder = Mockito.inOrder(personRepository, translationService);
         inOrder.verify(personRepository).findById(anyInt());
         inOrder.verify(translationService).translate(anyString(), eq("en"), eq("en"));
 
@@ -65,13 +65,13 @@ class HelloMockitoTest {
     @DisplayName("Greet a person not in the database")
     void greetAtAPersonThatDoesNotExist() {
         when(personRepository.findById(anyInt())).thenReturn(Optional.empty());
-        when(translationService.translate("Hello World, from Mockito!","en","en"))
+        when(translationService.translate("Hello World, from Mockito!", "en", "en"))
                 .thenReturn("Hello World, from Mockito!");
 
-        String greeting = helloMockito.greet(100,"en","en");
+        String greeting = helloMockito.greet(100, "en", "en");
         assertEquals("Hello World, from Mockito!", greeting);
 
-        InOrder inOrder= Mockito.inOrder(personRepository,translationService);
+        InOrder inOrder = Mockito.inOrder(personRepository, translationService);
         inOrder.verify(personRepository).findById(anyInt());
         inOrder.verify(translationService).translate(anyString(), eq("en"), eq("en"));
     }

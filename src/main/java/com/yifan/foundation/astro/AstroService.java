@@ -28,6 +28,6 @@ public class AstroService {
     private Map<String, Long> groupByCraft(AstroResponse response) {
         return response.people().stream()
                 .collect(
-                Collectors.groupingBy(Assignment::craft, Collectors.counting()));
+                        Collectors.groupingBy(Assignment::craft, Collectors.counting()));
     }
 }
