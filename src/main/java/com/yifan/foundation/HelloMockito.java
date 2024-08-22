@@ -19,6 +19,9 @@ public class HelloMockito {
         Optional<Person> person = personRepository.findById(id);
         String name = person.map(Person::getFirst).orElse("World");
 
-        return translationService.translate(name, sourceLanguage, targetLanguage);
+        // do not use:String.format(greeting, name) just use name, then prone:
+        // prone org.mockito.exceptions.misusing.PotentialStubbingProblem:
+        //      Strict stubbing argument mismatch.
+        return translationService.translate(String.format(greeting, name), sourceLanguage, targetLanguage);
     }
 }
