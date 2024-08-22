@@ -3,7 +3,9 @@ package com.yifan.foundation.service;
 import com.yifan.foundation.base.Person;
 import com.yifan.foundation.repository.PersonRepository;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * package_name: com.yifan.foundation.service
@@ -23,6 +25,19 @@ public class PersonService {
                 .stream()
                 .map(Person::getLast)
                 .toList();
+    }
+
+    public List<Person> findByIds(int... ids) {
+        return Arrays.stream(ids)
+                .mapToObj(personRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    public void deleteAll() {
+        personRepository.findAll()
+                .forEach(personRepository::delete);
     }
 
 }
