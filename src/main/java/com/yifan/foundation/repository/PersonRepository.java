@@ -1,4 +1,4 @@
-package com.yifan.foundation;
+package com.yifan.foundation.repository;
 
 import com.yifan.foundation.base.Person;
 

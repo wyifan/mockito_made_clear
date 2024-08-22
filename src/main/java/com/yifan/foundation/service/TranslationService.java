@@ -1,4 +1,4 @@
-package com.yifan.foundation;
+package com.yifan.foundation.service;
 
 /**
  * package_name: com.yifan.foundation

@@ -1,6 +1,8 @@
 package com.yifan.foundation;
 
 import com.yifan.foundation.base.Person;
+import com.yifan.foundation.repository.PersonRepository;
+import com.yifan.foundation.service.TranslationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,14 +75,6 @@ class HelloMockitoTest {
         inOrder.verify(personRepository).findById(anyInt());
         inOrder.verify(translationService).translate(anyString(), eq("en"), eq("en"));
     }
-
-//    private HelloMockito helloMockito = new HelloMockito();
-
-//    @Test
-//    void greetPerson() {
-//        String greeting = helloMockito.greet("World");
-//        assertEquals("Hello World, from Mockito!", greeting);
-//    }
 
 
 }

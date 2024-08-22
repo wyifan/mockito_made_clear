@@ -1,6 +1,8 @@
 package com.yifan.foundation;
 
 import com.yifan.foundation.base.Person;
+import com.yifan.foundation.repository.PersonRepository;
+import com.yifan.foundation.service.TranslationService;
 
 import java.util.Optional;
 

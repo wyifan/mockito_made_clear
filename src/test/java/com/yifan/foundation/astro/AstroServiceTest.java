@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
  */
 class AstroServiceTest {
 
-
     @Mock
     private Gateway<AstroResponse> gateway;
 
@@ -46,5 +45,23 @@ class AstroServiceTest {
             );
         });
 
+    }
+
+    @Test
+    @DisplayName("Using fake gateway service")
+    void testAstroData_usingOwnMockGateway() {
+        service = new AstroService(new FakeGateway());
+
+        // call the results under test
+        Map<String, Long> astroData = service.getAstroData();
+
+        // check the results from the method under test
+        astroData.forEach((craft, number) -> {
+            System.out.println(number + " astronauts aboard " + craft);
+            assertAll(
+                    () -> assertThat(number).isPositive(),
+                    () -> assertThat(craft).isNotBlank()
+            );
+        });
     }
 }
