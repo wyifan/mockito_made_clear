@@ -16,6 +16,6 @@ class HelloMockitoTest {
     @Test
     void greetPerson() {
         String greeting = helloMockito.greet("World");
-        assertEquals("Hello World, from mockito!", greeting);
+        assertEquals("Hello World, from Mockito!", greeting);
     }
 }
