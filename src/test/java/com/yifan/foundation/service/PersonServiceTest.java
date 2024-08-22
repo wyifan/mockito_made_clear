@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -34,6 +35,21 @@ class PersonServiceTest {
     private final Map<Integer, Person> peopleMap = people.stream().collect(
             Collectors.toMap(Person::getId, p -> p)
     );
+
+    @Test
+    @DisplayName("Mock generate a class with method return default values")
+    void defaultImplementations() {
+        PersonRepository personRepository = mock(PersonRepository.class);
+
+        // Mockito does better than just return nulls for mocked reference types.
+        // eg: if the return type is a method is a list, it return an empty list.
+        assertAll(
+                () -> assertNull(personRepository.save(any(Person.class))),
+                () -> assertTrue(personRepository.findById(anyInt()).isEmpty()),
+                () -> assertTrue(personRepository.findAll().isEmpty()),
+                () -> assertEquals(0, personRepository.count())
+        );
+    }
 
     @Test
     @DisplayName("using mock method")
