@@ -4,7 +4,6 @@ import com.yifan.foundation.base.Person;
 import com.yifan.foundation.repository.PersonRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * package_name: com.yifan.foundation.service
@@ -23,7 +22,7 @@ public class PersonService {
         return personRepository.findAll()
                 .stream()
                 .map(Person::getLast)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

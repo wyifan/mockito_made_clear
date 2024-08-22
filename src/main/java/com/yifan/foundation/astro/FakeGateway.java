@@ -18,6 +18,9 @@ import java.util.List;
  * on the gateway exactly once, it will be considered mock.
  */
 public class FakeGateway implements Gateway<AstroResponse> {
+
+    public static final String TIANGONG = "Tiangong";
+
     @Override
     public AstroResponse getResponse() {
         return new AstroResponse(12, "Success",
@@ -30,8 +33,8 @@ public class FakeGateway implements Gateway<AstroResponse> {
                         new Assignment("Alexander Grebenkin", "ISS"),
                         new Assignment("Butch Wilmore", "Voyager"),
                         new Assignment("Sunita Williams", "Jupiter 2"),
-                        new Assignment("Li Guangsu", "Tiangong"),
-                        new Assignment("Li Cong", "Tiangong"),
-                        new Assignment("Ye Guangfu", "Tiangong")));
+                        new Assignment("Li Guangsu", TIANGONG),
+                        new Assignment("Li Cong", TIANGONG),
+                        new Assignment("Ye Guangfu", TIANGONG)));
     }
 }
