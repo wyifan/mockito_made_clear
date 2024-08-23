@@ -161,4 +161,17 @@ class PersonServiceTest {
 
         verify(mockRepo).delete(null);
     }
+
+    @Test
+    @DisplayName("Find by id that not exists")
+    void findByIdThatDoesNotExist() {
+        when(mockRepo.findById(anyInt()))
+                .thenReturn(Optional.empty());
+
+        List<Person> personList = service.findByIds(999);
+        assertTrue(personList.isEmpty());
+
+        verify(mockRepo).findById(anyInt());
+
+    }
 }

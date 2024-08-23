@@ -6,6 +6,7 @@ import com.yifan.foundation.repository.PersonRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * package_name: com.yifan.foundation.service
@@ -32,7 +33,8 @@ public class PersonService {
                 .mapToObj(personRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .toList();
+                .collect(Collectors.toList());
+//                .toList(); // different: toList() available since 16 and unmodified
     }
 
     public void deleteAll() {
