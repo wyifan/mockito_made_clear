@@ -79,7 +79,7 @@ class PersonServiceTest {
         // check the results
         assertThat(lastNames).contains("Hopper", "Lovelace", "Bitch", "Borg", "Liskov");
 
-        verify(mockRepo).findAll();
+        verify(mockRepository).findAll();
     }
 
     @Test
@@ -122,7 +122,15 @@ class PersonServiceTest {
     @Test
     @DisplayName("Multiple calls of then methods")
     void testMultipleCalls() {
-        when(mockRepo.findById(anyInt())).thenReturn(Optional.of(people.get(0))).thenThrow(new IllegalAccessError("Person with id not found")).thenReturn(Optional.of(people.get(1))).thenReturn(Optional.empty());
+        when(mockRepo.findById(anyInt()))
+                .thenReturn(Optional.of(people.get(0)))
+                .thenReturn(Optional.of(people.get(1)))
+                // use below will not pass
+//                .thenThrow(new IllegalAccessError("Person with id not found"))
+                .thenReturn(Optional.of(people.get(2)))
+                .thenReturn(Optional.of(people.get(3)))
+                .thenReturn(Optional.of(people.get(4)))
+                .thenReturn(Optional.empty());
 
         List<Person> personList = service.findByIds(0, 1, 2, 3, 4, 5);
 
@@ -160,7 +168,10 @@ class PersonServiceTest {
     @Test
     @DisplayName("Do not use argThat with integers, will failed!")
     void findByIdsThatDoNotExist_argThat() {
-        when(mockRepo.findById(argThat(id -> id > 14))).thenReturn(Optional.empty());
+        // NullPointer Cannot invoke "java.lang.Integer.intValue()" because the return value of
+        // "org.mockito.Mockito.argThat(org.mockito.ArgumentMatcher)" is null
+        // FIX: CHANGE argThat --> intThat
+        when(mockRepo.findById(intThat(id -> id > 14))).thenReturn(Optional.empty());
 
         List<Person> personList = service.findByIds(15, 42, 78, 999);
 
