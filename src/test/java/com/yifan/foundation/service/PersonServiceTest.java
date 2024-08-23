@@ -174,4 +174,32 @@ class PersonServiceTest {
         verify(mockRepo).findById(anyInt());
 
     }
+
+    @Test
+    @DisplayName("Do not use argThat with integers, will failed!")
+    void findByIdsThatDoNotExist_argThat() {
+        when(mockRepo.findById(argThat(id -> id > 14)))
+                .thenReturn(Optional.empty());
+
+        List<Person> personList = service.findByIds(15, 42, 78, 999);
+
+        assertTrue(personList.isEmpty());
+
+        // verify the method execute times
+        verify(mockRepo, times(4)).findById(anyInt());
+    }
+
+    @Test
+    @DisplayName("use intThat instead of argThat, success!")
+    void findByIdsThatDoNotExist_intThat() {
+        when(mockRepo.findById(intThat(id -> id > 14)))
+                .thenReturn(Optional.empty());
+
+        List<Person> personList = service.findByIds(15, 42, 78, 999);
+
+        assertTrue(personList.isEmpty());
+
+        // verify the method execute times
+        verify(mockRepo, times(4)).findById(anyInt());
+    }
 }
