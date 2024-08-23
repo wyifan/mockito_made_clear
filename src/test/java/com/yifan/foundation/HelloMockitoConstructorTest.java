@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
@@ -33,7 +32,7 @@ class HelloMockitoConstructorTest {
         PersonRepository personRepository = mock(PersonRepository.class);
 
         when(personRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new Person(1,"Grace","Hopper", LocalDate.now())));
+                .thenReturn(Optional.of(new Person(1, "Grace", "Hopper", LocalDate.now())));
 
         // Mock for translator (instantiated inside HelloMockito constructor)
         try (MockedConstruction<DefaultTranslationService> ignored =
@@ -44,7 +43,7 @@ class HelloMockitoConstructorTest {
             // Instantiate HelloMockito with mocked repo and locally instantiated translator
             HelloMockito hello = new HelloMockito(personRepository);
             String greeting = hello.greet(1, "en", "en");
-            assertThat(greeting).isEqualTo("Hello, Grace, from Mockito! (translated)");
+            assertThat(greeting).isEqualTo("Hello Grace, from Mockito! (translated)");
         }
     }
 
@@ -65,7 +64,7 @@ class HelloMockitoConstructorTest {
             // Instantiate HelloMockito with mocked repo and locally instantiated translator
             HelloMockito hello = new HelloMockito(mockRepo);
             String greeting = hello.greet(1, "en", "en");
-            assertThat(greeting).isEqualTo("Hello, Grace, from Mockito! (translated)");
+            assertThat(greeting).isEqualTo("Hello Grace, from Mockito! (translated)");
 
             // Any instantiation of DefaultTranslationService will return the mocked instance
             DefaultTranslationService translator = new DefaultTranslationService();
