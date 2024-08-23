@@ -42,17 +42,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
 
-    private final List<Person> people = Arrays.asList(
-            new Person(1, "Grace", "Hopper", LocalDate.of(1906, Month.DECEMBER, 9)),
-            new Person(2, "Ada", "Lovelace", LocalDate.of(1815, Month.DECEMBER, 10)),
-            new Person(3, "Beast", "Bitch", LocalDate.of(1953, Month.JUNE, 15)),
-            new Person(14, "Anita", "Borg", LocalDate.of(1949, Month.JANUARY, 17)),
-            new Person(5, "Barbara", "Liskov", LocalDate.of(1939, Month.NOVEMBER, 7))
-    );
+    private final List<Person> people = Arrays.asList(new Person(1, "Grace", "Hopper", LocalDate.of(1906, Month.DECEMBER, 9)), new Person(2, "Ada", "Lovelace", LocalDate.of(1815, Month.DECEMBER, 10)), new Person(3, "Beast", "Bitch", LocalDate.of(1953, Month.JUNE, 15)), new Person(14, "Anita", "Borg", LocalDate.of(1949, Month.JANUARY, 17)), new Person(5, "Barbara", "Liskov", LocalDate.of(1939, Month.NOVEMBER, 7)));
 
-    private final Map<Integer, Person> peopleMap = people.stream().collect(
-            Collectors.toMap(Person::getId, p -> p)
-    );
+    private final Map<Integer, Person> peopleMap = people.stream().collect(Collectors.toMap(Person::getId, p -> p));
 
     @Mock
     private PersonRepository mockRepo;
@@ -67,12 +59,7 @@ class PersonServiceTest {
 
         // Mockito does better than just return nulls for mocked reference types.
         // eg: if the return type is a method is a list, it return an empty list.
-        assertAll(
-                () -> assertNull(personRepository.save(any(Person.class))),
-                () -> assertTrue(personRepository.findById(anyInt()).isEmpty()),
-                () -> assertTrue(personRepository.findAll().isEmpty()),
-                () -> assertEquals(0, personRepository.count())
-        );
+        assertAll(() -> assertNull(personRepository.save(any(Person.class))), () -> assertTrue(personRepository.findById(anyInt()).isEmpty()), () -> assertTrue(personRepository.findAll().isEmpty()), () -> assertEquals(0, personRepository.count()));
     }
 
     @Test
@@ -99,8 +86,7 @@ class PersonServiceTest {
     void getLastNames_usingAnnotation() {
         when(mockRepo.findAll()).thenReturn(people);
 
-        assertThat(service.getLastNames())
-                .contains("Hopper", "Lovelace", "Bitch", "Borg", "Liskov");
+        assertThat(service.getLastNames()).contains("Hopper", "Lovelace", "Bitch", "Borg", "Liskov");
 
         verify(mockRepo).findAll();
     }
@@ -125,12 +111,7 @@ class PersonServiceTest {
     @DisplayName("use anyInt to set the repository")
     @SuppressWarnings("unchecked")
     void findById_thenReturnWithMultipleArgs() {
-        when(mockRepo.findById(anyInt())).thenReturn(Optional.of(people.get(0)),
-                Optional.of(people.get(1)),
-                Optional.of(people.get(2)),
-                Optional.of(people.get(3)),
-                Optional.of(people.get(4)),
-                Optional.empty());
+        when(mockRepo.findById(anyInt())).thenReturn(Optional.of(people.get(0)), Optional.of(people.get(1)), Optional.of(people.get(2)), Optional.of(people.get(3)), Optional.of(people.get(4)), Optional.empty());
 
         List<Person> personList = service.findByIds(0, 1, 2, 3, 4, 5);
 
@@ -140,10 +121,7 @@ class PersonServiceTest {
     @Test
     @DisplayName("Multiple calls of then methods")
     void testMultipleCalls() {
-        when(mockRepo.findById(anyInt())).thenReturn(Optional.of(people.get(0)))
-                .thenThrow(new IllegalAccessError("Person with id not found"))
-                .thenReturn(Optional.of(people.get(1)))
-                .thenReturn(Optional.empty());
+        when(mockRepo.findById(anyInt())).thenReturn(Optional.of(people.get(0))).thenThrow(new IllegalAccessError("Person with id not found")).thenReturn(Optional.of(people.get(1))).thenReturn(Optional.empty());
 
         List<Person> personList = service.findByIds(0, 1, 2, 3, 4, 5);
 
@@ -169,8 +147,7 @@ class PersonServiceTest {
     @Test
     @DisplayName("Find by id that not exists")
     void findByIdThatDoesNotExist() {
-        when(mockRepo.findById(anyInt()))
-                .thenReturn(Optional.empty());
+        when(mockRepo.findById(anyInt())).thenReturn(Optional.empty());
 
         List<Person> personList = service.findByIds(999);
         assertTrue(personList.isEmpty());
@@ -182,8 +159,7 @@ class PersonServiceTest {
     @Test
     @DisplayName("Do not use argThat with integers, will failed!")
     void findByIdsThatDoNotExist_argThat() {
-        when(mockRepo.findById(argThat(id -> id > 14)))
-                .thenReturn(Optional.empty());
+        when(mockRepo.findById(argThat(id -> id > 14))).thenReturn(Optional.empty());
 
         List<Person> personList = service.findByIds(15, 42, 78, 999);
 
@@ -196,8 +172,7 @@ class PersonServiceTest {
     @Test
     @DisplayName("use intThat instead of argThat, success!")
     void findByIdsThatDoNotExist_intThat() {
-        when(mockRepo.findById(intThat(id -> id > 14)))
-                .thenReturn(Optional.empty());
+        when(mockRepo.findById(intThat(id -> id > 14))).thenReturn(Optional.empty());
 
         List<Person> personList = service.findByIds(15, 42, 78, 999);
 
@@ -246,5 +221,34 @@ class PersonServiceTest {
 
         assertThat(personCaptor.getValue()).isEqualTo(hopper);
         assertThat(actual).isEqualTo(hopper);
+    }
+
+    @Test
+    @DisplayName("Save persons test")
+    void savePersons() {
+        when(mockRepo.save(any(Person.class))).thenReturn(people.get(0), people.get(1), people.get(2), people.get(3), people.get(4));
+
+        // test the service
+        assertEquals(List.of(1, 2, 3, 14, 5), service.savePersons(people.toArray(Person[]::new)));
+
+        verify(mockRepo, times(people.size())).save(any(Person.class));
+        verify(mockRepo, never()).delete(any(Person.class));
+    }
+
+    @Test
+    @DisplayName("User answer")
+    void savePersons_UserAnswer() {
+        // lambda expression implementation of Answer<Person>
+        // TODO: why use getArgument(0)？
+        when(mockRepo.save(any(Person.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        List<Integer> ids = service.savePersons(people.toArray(Person[]::new));
+
+        List<Integer> actual = people.stream()
+                .map(Person::getId)
+                .collect(Collectors.toList());
+
+        assertEquals(ids, actual);
     }
 }
