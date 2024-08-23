@@ -280,4 +280,29 @@ class PersonServiceTest {
         // You can, however, wrap the repository in a spy and use that to keep count:
         verify(personRepository, times(people.size())).save(any(Person.class));
     }
+
+    @Test
+    @DisplayName("Mock final method")
+    void testMockOfFinalMethod() {
+        // Mock a class containing final methods
+        PersonRepository personRepository = mock(InMemoryPersonRepository.class);
+
+        // set the expectation on final save method in the mock
+        when(personRepository.save(any(Person.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // inject the mock
+        PersonService personService = new PersonService(personRepository);
+
+        // test the service
+        List<Integer> ids = personService.savePersons(
+                people.toArray(Person[]::new));
+
+        // assert value
+        assertThat(ids).containsExactly(1,2,3,14,5);
+
+        // verify the save method in the mock was invoked five times
+        verify(personRepository, times(5)).save(any(Person.class));
+
+    }
 }
