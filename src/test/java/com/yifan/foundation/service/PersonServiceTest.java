@@ -5,6 +5,8 @@ import com.yifan.foundation.repository.PersonRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 /**
@@ -201,5 +205,46 @@ class PersonServiceTest {
 
         // verify the method execute times
         verify(mockRepo, times(4)).findById(anyInt());
+    }
+
+    @Test
+    @DisplayName("getMaxId test")
+    void findMaxId() {
+        when(mockRepo.findAll()).thenReturn(people);
+
+        assertThat(service.getHighestId()).isEqualTo(14);
+
+        verify(mockRepo).findAll();
+    }
+
+    @Test
+    @DisplayName("GetMaxId test using BDD: Behavior Driven Development")
+    void findMaxId_BDD() {
+        given(mockRepo.findAll()).willReturn(people);
+
+        assertThat(service.getHighestId()).isEqualTo(14);
+
+        // times(1) can be emitted because of override version of should
+        then(mockRepo).should(times(1)).findAll();
+    }
+
+    @Captor
+    private ArgumentCaptor<Person> personCaptor;
+
+    @Test
+    @DisplayName("Capturing Argument")
+    void createPersonUsingDateString() {
+        Person hopper = people.get(0);
+
+        when(mockRepo.save(hopper)).thenReturn(hopper);
+
+        Person actual = service.createPerson(1, "Grace", "Hopper", "1906-12-09");
+
+        // Argument captors allow you to find out exactly what arguments were supplied to a mocked method,
+        // even when that argument is created as a local variable in the implementation.
+        verify(mockRepo).save(personCaptor.capture());
+
+        assertThat(personCaptor.getValue()).isEqualTo(hopper);
+        assertThat(actual).isEqualTo(hopper);
     }
 }

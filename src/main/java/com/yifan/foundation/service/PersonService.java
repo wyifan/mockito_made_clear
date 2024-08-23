@@ -3,6 +3,7 @@ package com.yifan.foundation.service;
 import com.yifan.foundation.base.Person;
 import com.yifan.foundation.repository.PersonRepository;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,19 @@ public class PersonService {
     public void deleteAll() {
         personRepository.findAll()
                 .forEach(personRepository::delete);
+    }
+
+    public Integer getHighestId() {
+        return personRepository.findAll()
+                .stream()
+                .map(Person::getId)
+                .max(Integer::compareTo)
+                .orElse(0);
+    }
+
+    public Person createPerson(int id, String first, String last, String dob) {
+        Person person = new Person(id, first, last, LocalDate.parse(dob));
+        return personRepository.save(person);
     }
 
 }
