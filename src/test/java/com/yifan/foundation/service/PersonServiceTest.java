@@ -276,6 +276,8 @@ class PersonServiceTest {
         assertThat(personRepository.findAll()).isEqualTo(people);
 
         // verify the method calls on the spy
+        // What you can’t do is check the expected behavior: verify that the service invokes the save method on the repository the expected number of times.
+        // You can, however, wrap the repository in a spy and use that to keep count:
         verify(personRepository, times(people.size())).save(any(Person.class));
     }
 }
