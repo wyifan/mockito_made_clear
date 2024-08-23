@@ -56,4 +56,11 @@ public class PersonService {
         return personRepository.save(person);
     }
 
+    public List<Integer> savePersons(Person... persons) {
+        return Arrays.stream(persons)
+                .map(personRepository::save)
+                .map(Person::getId)
+                .collect(Collectors.toList());
+    }
+
 }
