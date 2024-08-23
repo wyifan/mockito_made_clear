@@ -264,4 +264,18 @@ class PersonServiceTest {
         assertThat(personRepository.findAll()).isEqualTo(people);
 
     }
+
+    @Test
+    @DisplayName("Test using spy")
+    void  spyOnRepository() {
+        PersonRepository personRepository = spy(new InMemoryPersonRepository());
+        PersonService personService = new PersonService(personRepository);
+
+        personService.savePersons(people.toArray(Person[]::new));
+
+        assertThat(personRepository.findAll()).isEqualTo(people);
+
+        // verify the method calls on the spy
+        verify(personRepository, times(people.size())).save(any(Person.class));
+    }
 }
