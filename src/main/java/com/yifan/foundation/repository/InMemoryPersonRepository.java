@@ -14,8 +14,12 @@ import java.util.stream.Collectors;
 public class InMemoryPersonRepository implements PersonRepository {
     private final List<Person> people = Collections.synchronizedList(new ArrayList<>());
 
+    /**
+     * add final to make the others do not change this logic
+     * @param person
+     */
     @Override
-    public Person save(Person person) {
+    public final Person save(Person person) {
         synchronized (people) {
             people.add(person);
         }
@@ -39,8 +43,12 @@ public class InMemoryPersonRepository implements PersonRepository {
         return people.size();
     }
 
+    /**
+     * add final to make the others do not change this logic
+     * @param person
+     */
     @Override
-    public void delete(Person person) {
+    public final void delete(Person person) {
         synchronized (people) {
             people.remove(person);
         }
