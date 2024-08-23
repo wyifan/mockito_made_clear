@@ -1,6 +1,7 @@
 package com.yifan.foundation.service;
 
 import com.yifan.foundation.base.Person;
+import com.yifan.foundation.repository.InMemoryPersonRepository;
 import com.yifan.foundation.repository.PersonRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -250,5 +251,17 @@ class PersonServiceTest {
                 .collect(Collectors.toList());
 
         assertEquals(ids, actual);
+    }
+
+    @Test
+    @DisplayName("Test using in memory repository")
+    void savePersons_InMemoryRepository() {
+        PersonRepository personRepository = new InMemoryPersonRepository();
+        PersonService personService = new PersonService(personRepository);
+
+        personService.savePersons(people.toArray(Person[]::new));
+
+        assertThat(personRepository.findAll()).isEqualTo(people);
+
     }
 }
